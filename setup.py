@@ -4,6 +4,7 @@ setup(
     name='polarityserv',
     version='0.1dev',
     packages=[
+        'polarity_server',
     ],
     license='',
     author='William Moffitt',
