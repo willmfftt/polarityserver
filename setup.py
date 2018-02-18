@@ -5,6 +5,7 @@ setup(
     version='0.1dev',
     packages=[
         'polarity_server',
+        'polarity_server.shell_deployment',
     ],
     license='',
     author='William Moffitt',
@@ -16,6 +17,7 @@ setup(
         ],
     },
     install_requires=[
+        'pexpect',
     ],
     python_requires='~=3.6',
 )
