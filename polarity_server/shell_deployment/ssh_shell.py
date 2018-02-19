@@ -4,16 +4,18 @@ import time
 from pexpect.pxssh import ExceptionPxssh
 from pexpect.pxssh import pxssh
 
+from polarity_server.shell_deployment.base import BaseShell
 
-class SSHShell:
 
-    def __init__(self, host, username,
-                 password=None, priv_key_path=None):
-        self._host = host
-        self._username = username
-        self._password = password
+class SSHShell(BaseShell):
+
+    PORT = 22
+
+    def __init__(self, host, username, password=None,
+                 priv_key_path=None):
+        super().__init__(host, username, password)
+
         self._priv_key_path = priv_key_path
-
         self._conn = None
 
     def create_connection(self):
@@ -41,6 +43,9 @@ class SSHShell:
             self._conn = tmp_conn
             self._conn.sendline("/bin/bash")
 
+            logging.info("SSH connection established to host %s",
+                         self._host)
+
             return True
         except ExceptionPxssh:
             logging.warning("SSH connection failed to host %s",
@@ -62,3 +67,6 @@ class SSHShell:
         else:
             logging.info("Cannot interact with SSH connection. "
                          "Connection to host %s closed", self._host)
+
+    def is_alive(self):
+        return self._conn and self._conn.isalive()
