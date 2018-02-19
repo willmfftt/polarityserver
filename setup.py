@@ -5,7 +5,10 @@ setup(
     version='0.1dev',
     packages=[
         'polarity_server',
+        'polarity_server.objects',
+        'polarity_server.rest',
         'polarity_server.shell_deployment',
+        'polarity_server.tasks',
     ],
     license='',
     author='William Moffitt',
@@ -17,6 +20,10 @@ setup(
         ],
     },
     install_requires=[
+        'argparse',
+        'flask',
+        'flask-jsonpify',
+        'flask-restful',
         'pexpect',
     ],
     python_requires='~=3.6',
