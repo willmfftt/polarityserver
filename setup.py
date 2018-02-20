@@ -6,6 +6,7 @@ setup(
     packages=[
         'polarity_server',
         'polarity_server.objects',
+        'polarity_server.persistence',
         'polarity_server.rest',
         'polarity_server.shell_deployment',
         'polarity_server.tasks',
@@ -24,7 +25,9 @@ setup(
         'flask',
         'flask-jsonpify',
         'flask-restful',
+        'jsonpickle',
         'pexpect',
+        'polarity',
     ],
     python_requires='~=3.6',
 )

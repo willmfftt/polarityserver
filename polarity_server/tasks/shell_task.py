@@ -18,7 +18,8 @@ class ShellTask:
         shell = factory.get_shell_for_port(self._port)
         if shell:
             shell.create_connection()
-            session = Session(self._host, shell)
+            session = Session(self._host,
+                              self._username, shell)
             return session
 
         return None
