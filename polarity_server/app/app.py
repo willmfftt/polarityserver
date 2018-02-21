@@ -2,18 +2,16 @@ import logging
 import os
 import sys
 from queue import Empty
-from queue import Queue
 from threading import Thread
 
 import argparse
 
+from polarity_server import globals
 from polarity_server.rest import RestApi
 
 
-class PolarityServer:
+class App:
 
-    sessions = []
-    task_queue = Queue()
     thread_run = True
 
     @classmethod
@@ -43,10 +41,10 @@ class PolarityServer:
                 cls.print_usage()
             elif command == "sessions":
                 print("")
-                if not cls.sessions:
+                if not globals.sessions:
                     print("No active sessions")
                 else:
-                    for i, session in enumerate(cls.sessions):
+                    for i, session in enumerate(globals.sessions):
                         print("{} - {}@{}"
                               .format(str(i), session.username,
                                       session.host))
@@ -68,7 +66,7 @@ class PolarityServer:
         cls.thread_run = False
         thread.join()
 
-        for session in cls.sessions:
+        for session in globals.sessions:
             session.shell.close_connection()
 
         sys.exit(os.EX_OK)
@@ -84,9 +82,9 @@ class PolarityServer:
             interact <session id>: interact with host session
             """)
 
-    @classmethod
-    def find_session_by_index(cls, idx):
-        for i, session in enumerate(cls.sessions):
+    @staticmethod
+    def find_session_by_index(idx):
+        for i, session in enumerate(globals.sessions):
             if str(i) == idx:
                 return session
         return None
@@ -98,17 +96,17 @@ class PolarityServer:
             if task:
                 session = task.execute()
                 if session:
-                    cls.sessions.append(session)
+                    globals.sessions.append(session)
 
-            for session in cls.sessions:
+            for session in globals.sessions:
                 if not session.shell.is_alive():
                     logging.info("Session closed for host: %s",
                                  session.host)
-                    cls.sessions.remove(session)
+                    globals.sessions.remove(session)
 
-    @classmethod
-    def get_task(cls):
+    @staticmethod
+    def get_task():
         try:
-            return cls.task_queue.get(timeout=1.0)
+            return globals.task_queue.get(timeout=1.0)
         except Empty:
             return None

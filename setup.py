@@ -5,6 +5,7 @@ setup(
     version='0.1dev',
     packages=[
         'polarity_server',
+        'polarity_server.app',
         'polarity_server.objects',
         'polarity_server.persistence',
         'polarity_server.rest',

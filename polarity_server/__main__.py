@@ -1,8 +1,8 @@
-from polarity_server import PolarityServer
+from polarity_server.app import App
 
 
 def main():
-    PolarityServer.run()
+    App.run()
 
 
 if __name__ == "__main__":

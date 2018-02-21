@@ -3,7 +3,7 @@ from flask import Flask
 from flask import request
 from flask_jsonpify import jsonify
 
-from polarity_server import PolarityServer
+from polarity_server import globals
 from polarity_server.rest.server import Server
 from polarity_server.tasks.host_task import HostTask
 
@@ -33,7 +33,7 @@ class RestApi:
         if hosts:
             for host in hosts:
                 task = HostTask(host)
-                PolarityServer.task_queue.put(task)
+                globals.task_queue.put(task)
 
         return RestApi.success_response()
 
