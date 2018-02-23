@@ -1,3 +1,5 @@
+import json
+
 import jsonpickle
 from flask import Flask
 from flask import request
@@ -28,11 +30,20 @@ class RestApi:
     @staticmethod
     @app.route("/hosts", methods=["POST"])
     def hosts():
-        hosts = jsonpickle.decode(request.data)
+        data = request.json
+
+        hosts = []
+        shared_users = []
+
+        if "hosts" in data:
+            hosts = jsonpickle.decode(data["hosts"])
+
+        if "shared_users" in data:
+            shared_users = jsonpickle.decode(data["shared_users"])
 
         if hosts:
             for host in hosts:
-                task = HostTask(host)
+                task = HostTask(host, shared_users)
                 globals.task_queue.put(task)
 
         return RestApi.success_response()
