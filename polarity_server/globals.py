@@ -1,5 +1,5 @@
 from queue import Queue
 
 
-sessions = []
+sessions = {}
 task_queue = Queue()

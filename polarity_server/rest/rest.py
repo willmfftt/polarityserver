@@ -1,5 +1,3 @@
-import json
-
 import jsonpickle
 from flask import Flask
 from flask import request

