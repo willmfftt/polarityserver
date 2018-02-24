@@ -1,6 +1,5 @@
 import logging
 import os
-import shutil
 import subprocess
 
 from polarity_server.persistence.base import BasePersistence
@@ -16,11 +15,6 @@ class SSHPersistence(BasePersistence):
         SSHPersistence.__generate_ssh_key()
 
         if self._host.os_info.os_family in self.OS_FAMILY:
-            ssh_copy_id = shutil.which("ssh-copy-id")
-
-            if not ssh_copy_id:
-                return False
-
             home_dir = os.environ["HOME"]
             pub_key = "{}/.ssh/id_rsa.pub".format(home_dir)
 

@@ -78,22 +78,23 @@ class App:
         thread.join()
 
         if globals.sessions:
-            for session in list(globals.sessions.values()):
-                session.shell.close_connection()
+            for ip_address in globals.sessions:
+                for session in globals.sessions[ip_address]:
+                    session.shell.close_connection()
 
         sys.exit(os.EX_OK)
 
     @staticmethod
     def print_usage():
         print("""
-            Usage:
+        Usage:
 
-            help: print this message
-            quit: exit the program
-            sessions: print the active session hosts
-            sessions <id>: print the active session host username's
-            interact <session id> <username>: interact with host session
-            """)
+        help: print this message
+        quit: exit the program
+        sessions: print the active session hosts
+        sessions <id>: print the active session host username's
+        interact <session id> <username>: interact with host session
+        """)
 
     @staticmethod
     def find_session(idx, username):

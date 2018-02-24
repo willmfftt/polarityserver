@@ -57,6 +57,7 @@ class SSHShell(BaseShell):
     def send_command(self, command):
         if self.is_alive():
             self._conn.sendline(command)
+            time.sleep(0.5)
 
     def interact(self):
         if self.is_alive():

