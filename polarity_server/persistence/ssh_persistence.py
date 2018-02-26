@@ -1,6 +1,7 @@
 import logging
 import os
 import subprocess
+import time
 
 from polarity_server.persistence.base import BasePersistence
 from polarity_server.shell_deployment import SSHShell
@@ -60,3 +61,4 @@ class SSHPersistence(BasePersistence):
                 "",
             ]
             subprocess.Popen(command)
+            time.sleep(2)

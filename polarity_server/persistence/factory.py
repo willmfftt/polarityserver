@@ -1,4 +1,4 @@
-from polarity_server.persistence.bashrc_persistence import BashRcPersistence
+# from polarity_server.persistence.bashrc_persistence import BashRcPersistence
 # from polarity_server.persistence.cron_persistence import CronPersistence
 from polarity_server.persistence.ssh_persistence import SSHPersistence
 
@@ -7,7 +7,7 @@ class PersistenceFactory:
 
     ORDERED_PERSISTENCE = [
         SSHPersistence,
-        BashRcPersistence,
+        # BashRcPersistence,
         # CronPersistence,
     ]
 

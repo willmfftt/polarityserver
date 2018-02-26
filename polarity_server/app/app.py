@@ -5,6 +5,7 @@ from queue import Empty
 from threading import Thread
 
 import argparse
+import jsonpickle
 
 from polarity_server import globals
 from polarity_server.rest import RestApi
@@ -19,6 +20,8 @@ class App:
         parser = argparse.ArgumentParser()
         parser.add_argument("--port", "-p", required=False, type=int,
                             default=5000, help="Port for REST API to listen on")
+        parser.add_argument("--input", "-i", required=False, type=str,
+                            help="File to preload sessions from")
 
         if sys.argv == 1:
             parser.print_help()
@@ -27,6 +30,15 @@ class App:
         args = parser.parse_args()
 
         logging.basicConfig(level=logging.INFO)
+
+        if args.input:
+            if os.path.isfile(args.input):
+                with open(args.input) as file:
+                    data = file.read()
+                    globals.sessions = jsonpickle.decode(data)
+            else:
+                logging.error("Invalid input file specified")
+                sys.exit(os.EX_SOFTWARE)
 
         RestApi.start_server(args.port)
 
@@ -70,6 +82,13 @@ class App:
                         print("\nNo session found for specified id and/or username\n")
                 else:
                     print("\nSession id and username not specified\n")
+            elif "save" in command:
+                if len(command.split()) > 1:
+                    filename = command.split()[1].strip()
+                    with open(filename) as file:
+                        file.write(jsonpickle.encode(globals.sessions))
+                else:
+                    print("\nFilename not specified\n")
             elif command != "quit":
                 print("\nInvalid command\n")
 
@@ -94,6 +113,7 @@ class App:
         sessions: print the active session hosts
         sessions <id>: print the active session host username's
         interact <session id> <username>: interact with host session
+        save <filename>: save current state to file 
         """)
 
     @staticmethod
